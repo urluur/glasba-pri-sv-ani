@@ -1,25 +1,40 @@
 let previousData = null;
 let currentIndex = 0;
 let data = [];
+let isLoading = false;
 
-const csvUrl =
-    'https://docs.google.com/spreadsheets/d/e/2PACX-1vSYxfGny6wzQTybmOngXjUFyMZOf6_PfjUavJicO3ZIlO9WMEo1nsnHa5ghTjB7lEObTkuBthF4bTCI/pub?output=csv';
+const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSYxfGny6wzQTybmOngXjUFyMZOf6_PfjUavJicO3ZIlO9WMEo1nsnHa5ghTjB7lEObTkuBthF4bTCI/pub?output=csv';
 
-// prenesi in obdelaj CSV podatke
+function showSpinner() {
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = `
+        <div class="d-flex justify-content-center align-items-center" style="height: 180px;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Nalaganje...</span>
+            </div>
+        </div>
+    `;
+}
+
 function fetchData() {
-    fetch(csvUrl)
+    isLoading = true;
+    showSpinner();
+    const url = csvUrl + (csvUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+    fetch(url)
         .then(response => response.text())
         .then(csvData => {
             const parsed = Papa.parse(csvData.trim(), { skipEmptyLines: true });
-            const newData = parsed.data.slice(1); // ignoriraj prvo vrstico
-            
-            // posodobi podatke, če so se spremenili
-            if (JSON.stringify(newData) === JSON.stringify(previousData)) return;
+            const newData = parsed.data.slice(1);
+
+            if (JSON.stringify(newData) === JSON.stringify(previousData)) {
+                isLoading = false;
+                displayContent();
+                return;
+            }
 
             data = newData;
             previousData = data;
 
-            // nastavi indeks na danes
             if (data.length > 0) {
                 const todayString = formatDate(new Date());
                 const todayRow = data.find(row => row[0] === todayString);
@@ -28,17 +43,31 @@ function fetchData() {
                 currentIndex = 0;
             }
 
+            isLoading = false;
             displayContent();
         })
-        .catch(error => console.error('Napaka pri branju CSV:', error));
+        .catch(error => {
+            isLoading = false;
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = `<div class="alert alert-danger">Napaka pri branju CSV: ${error}</div>`;
+        });
 }
 
-// prikaz vsebine na podlagi trenutnega indeksa
 function displayContent() {
     const contentDiv = document.getElementById('content');
+    const headerInfo = document.getElementById('headerInfo');
     const izbranDatum = document.getElementById('izbran_datum');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+    const prevDateLabel = document.getElementById('prevDateLabel');
+    const nextDateLabel = document.getElementById('nextDateLabel');
 
-    // prikaz izbranega datuma
+    if (isLoading) {
+        showSpinner();
+        headerInfo.innerHTML = '';
+        return;
+    }
+
     if (izbranDatum) {
         if (data.length > 0 && currentIndex >= 0 && currentIndex < data.length) {
             izbranDatum.textContent = data[currentIndex][0];
@@ -47,43 +76,71 @@ function displayContent() {
         }
     }
 
-    // kaj prikazati, če ni podatkov
+    if (prevButton && prevDateLabel) {
+        if (currentIndex > 0 && data[currentIndex - 1]) {
+            prevButton.disabled = false;
+            prevDateLabel.textContent = data[currentIndex - 1][0];
+        } else {
+            prevButton.disabled = true;
+            prevDateLabel.textContent = '—';
+        }
+    }
+    if (nextButton && nextDateLabel) {
+        if (currentIndex < data.length - 1 && data[currentIndex + 1]) {
+            nextButton.disabled = false;
+            nextDateLabel.textContent = data[currentIndex + 1][0];
+        } else {
+            nextButton.disabled = true;
+            nextDateLabel.textContent = '—';
+        }
+    }
+
     if (data.length === 0 || currentIndex < 0 || currentIndex >= data.length) {
-        contentDiv.innerHTML = '<p>Ni podatkov za izbrani dan.</p>';
+        headerInfo.innerHTML = '';
+        contentDiv.innerHTML = '<p class="text-center text-muted">Ni podatkov za izbrani dan.</p>';
         return;
     }
 
     const row = data[currentIndex];
 
+    headerInfo.innerHTML = `
+        <div class="mb-2">
+            <span class="h5 font-weight-bold"><i class="bi bi-calendar3-event text-primary"></i> ${row[1]}</span>
+        </div>
+        <div class="mb-1 text-muted">
+            <i class="bi bi-person"></i> Orgle: ${row[2] || '—'}
+        </div>
+    `;
+
     contentDiv.innerHTML = `
-        <h2>${row[1]}</h2>
-        <p><strong>Opis in organisti:</strong> ${row[2] || '/'}</p>
-        <p><strong>Vstop:</strong> ${row[3] || '/'}</p>
-        <p><strong>Gospod usmili se:</strong> ${row[4] || '/'}</p>
-        <p><strong>Slava:</strong> ${row[5] || '/'}</p>
-        <p><strong>Psalm:</strong> ${row[6] || '/'}</p>
-        <p><strong>Aleluja oz. vrstica:</strong> ${row[7] || '/'}</p>
-        <p><strong>Vera:</strong> ${row[8] || '/'}</p>
-        <p><strong>Darovanje:</strong> ${row[9] || '/'}</p>
-        <p><strong>Svet:</strong> ${row[10] || '/'}</p>
-        <p><strong>Odpev po povzdigovanju:</strong> ${row[11] || '/'}</p>
-        <p><strong>Očenaš:</strong> ${row[12] || '/'}</p>
-        <p><strong>Jagnje božje:</strong> ${row[13] || '/'}</p>
-        <p><strong>Obhajilo 1:</strong> Najprej nekoliko tišine ali preludija, da se glavnina ljudi obhaja, nato: ${row[14] || '/'}</p>
-        <p><strong>Obhajilo 2:</strong> ${row[15] || '/'}</p>
-        <p><strong>Zaključek:</strong> ${row[16] || '/'}</p>
+        <table class="table table-program table-hover table-bordered shadow-sm mx-auto" style="max-width:700px;">
+            <tbody>
+                <tr><th>Vstop</th><td>${row[3] || '—'}</td></tr>
+                <tr><th>Gospod usmili se</th><td>${row[4] || '—'}</td></tr>
+                <tr><th>Slava</th><td>${row[5] || '—'}</td></tr>
+                <tr><th>Psalm</th><td>${row[6] || '—'}</td></tr>
+                <tr><th>Aleluja oz. vrstica</th><td>${row[7] || '—'}</td></tr>
+                <tr><th>Vera</th><td>${row[8] || '—'}</td></tr>
+                <tr><th>Darovanje</th><td>${row[9] || '—'}</td></tr>
+                <tr><th>Svet</th><td>${row[10] || '—'}</td></tr>
+                <tr><th>Odpev po povzdigovanju</th><td>${row[11] || '—'}</td></tr>
+                <tr><th>Očenaš</th><td>${row[12] || '—'}</td></tr>
+                <tr><th>Jagnje božje</th><td>${row[13] || '—'}</td></tr>
+                <tr><th>Obhajilo 1</th><td>Najprej nekoliko tišine ali preludija, da se glavnina ljudi obhaja, nato: ${row[14] || '—'}</td></tr>
+                <tr><th>Obhajilo 2</th><td>${row[15] || '—'}</td></tr>
+                <tr><th>Zaključek</th><td>${row[16] || '—'}</td></tr>
+            </tbody>
+        </table>
     `;
 }
 
-// prikaz datuma v formatu dd. mm. yyyy
 function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
-    const month = date.getMonth() + 1; // No leading zero
+    const month = date.getMonth() + 1;
     const year = date.getFullYear();
     return `${day}. ${month}. ${year}`;
 }
 
-// gumb za prejšnji in naslednji dan
 document.getElementById('prevButton').addEventListener('click', () => {
     if (currentIndex > 0) {
         currentIndex--;
@@ -95,11 +152,7 @@ document.getElementById('todayButton').addEventListener('click', () => {
     if (data.length > 0) {
         const todayString = formatDate(new Date());
         const todayRow = data.find(row => row[0] === todayString);
-        if (todayRow) {
-            currentIndex = data.indexOf(todayRow);
-        } else {
-            alert('Danes ni podatkov.');
-        }
+        currentIndex = todayRow ? data.indexOf(todayRow) : 0;
         displayContent();
     }
 });
@@ -111,11 +164,9 @@ document.getElementById('nextButton').addEventListener('click', () => {
     }
 });
 
-// tiskanje
 document.getElementById('printButton').addEventListener('click', () => {
     window.print();
 });
 
-// prvi klic funkcije za prenos podatkov in timer za osvežitev
 fetchData();
 setInterval(fetchData, 60000);
