@@ -20,18 +20,20 @@
                 <i class="bi bi-music-note-list text-primary"></i>
                 <span>Program pesmi za <span id="izbran_datum" class="main-title-date"></span></span>
             </h1>
-            <div class="text-center mb-4">
-                <button id="prevButton" class="btn btn-outline-primary mr-2">
-                    <i class="bi bi-chevron-left"></i>
-                    <span id="prevDateLabel">Prejšnji dan</span>
-                </button>
-                <button id="todayButton" class="btn btn-outline-secondary mx-2">
-                    <i class="bi bi-calendar3"></i> Danes
-                </button>
-                <button id="nextButton" class="btn btn-outline-primary ml-2">
-                    <span id="nextDateLabel">Naslednji dan</span>
-                    <i class="bi bi-chevron-right"></i>
-                </button>
+            <div class="d-flex justify-content-center mb-4">
+                <div class="btn-group" role="group" aria-label="Navigation buttons">
+                    <button id="prevButton" class="btn btn-outline-primary">
+                        <i class="bi bi-chevron-left"></i>
+                        <span id="prevDateLabel">Prejšnji dan</span>
+                    </button>
+                    <button id="todayButton" class="btn btn-outline-secondary">
+                        <i class="bi bi-calendar3"></i> Danes
+                    </button>
+                    <button id="nextButton" class="btn btn-outline-primary">
+                        <span id="nextDateLabel">Naslednji dan</span>
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
             </div>
             <div id="headerInfo" class="mb-3"></div>
             <div id="content" class="mb-3 text-center"></div>
