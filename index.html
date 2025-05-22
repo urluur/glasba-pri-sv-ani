@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Pesmi</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Program pesmi za <inline id="izbran_datum"></inline></h1>
+        <div class="text-center mb-4">
+            <button id="prevButton" class="btn btn-primary">Prejšnji dan</button>
+            <button id="todayButton" class="btn btn-secondary">Danes</button>
+            <button id="nextButton" class="btn btn-primary">Naslednji dan</button>
+        </div>
+        <div id="content" class="mb-4">
+            <!-- Tu pridejo podatki -->
+        </div>
+        <button id="printButton" class="btn btn-success">Natisni</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
