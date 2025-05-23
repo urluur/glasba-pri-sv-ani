@@ -15,6 +15,7 @@ document.getElementById('printButton').addEventListener('click', () => {
     const row = data[currentIndex].map(removeDiacritics);
     const doc = new window.jspdf.jsPDF();
 
+    doc.setTextColor(20);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(16);
     doc.text(`Program pesmi za ${row[0]}`, 14, 18);
@@ -51,13 +52,18 @@ document.getElementById('printButton').addEventListener('click', () => {
             cellWidth: 'wrap',
             overflow: 'linebreak',
             halign: 'left',
-            valign: 'top'
+            valign: 'top',
+            textColor: 20
         },
         columnStyles: {
             0: { cellWidth: 50 },
             1: { cellWidth: 120 }
         },
-        // headStyles: { fillColor: [240, 240, 240], textColor: 20 },
+        headStyles: {
+            fillColor: [255, 255, 255],
+            textColor: 20,
+            fontStyle: 'bold'
+        },
         theme: 'grid',
         margin: { left: 14, right: 14 }
     });
