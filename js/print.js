@@ -1,15 +1,28 @@
+function removeDiacritics(str) {
+    if (!str) return '';
+    return str
+        .replace(/č/g, 'c').replace(/Č/g, 'C')
+        .replace(/š/g, 's').replace(/Š/g, 'S')
+        .replace(/ž/g, 'z').replace(/Ž/g, 'Z');
+}
+
 document.getElementById('printButton').addEventListener('click', () => {
     if (data.length === 0 || currentIndex < 0 || currentIndex >= data.length) {
         alert('Ni podatkov za izbrani dan.');
         return;
     }
 
-    const row = data[currentIndex];
+    const row = data[currentIndex].map(removeDiacritics);
     const doc = new window.jspdf.jsPDF();
 
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(16);
     doc.text(`Program pesmi za ${row[0]}`, 14, 18);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(12);
+    doc.text(`Naslov: ${row[1] || '—'}`, 14, 28);
+    doc.text(`Orgle: ${row[2] || '—'}`, 14, 36);
 
     const fields = [
         ['Vstop', row[3] || '—'],
@@ -22,16 +35,16 @@ document.getElementById('printButton').addEventListener('click', () => {
         ['Svet', row[10] || '—'],
         ['Odpev po povzdigovanju', row[11] || '—'],
         ['Očenaš', row[12] || '—'],
-        ['Jagnje božje', row[13] || '—'],
-        ['Obhajilo 1', row[14] ? 'Najprej nekoliko tišine ali preludija, da se glavnina ljudi obhaja, nato: ' + row[14] : '—'],
+        ['Jagnje bozje', row[13] || '—'],
+        ['Obhajilo 1', row[14] ? 'Najprej nekoliko tisine ali preludija, da se glavnina ljudi obhaja, nato:\n' + row[14] : '—'],
         ['Obhajilo 2', row[15] || '—'],
-        ['Zaključek', row[16] || '—']
+        ['Zakljucek', row[16] || '—']
     ];
 
     doc.autoTable({
-        head: [['Del maše', 'Pesem']],
+        head: [['Del mase', 'Pesem']],
         body: fields,
-        startY: 28,
+        startY: 44,
         styles: {
             font: 'helvetica',
             fontSize: 11,
