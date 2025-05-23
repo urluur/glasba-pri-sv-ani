@@ -34,7 +34,7 @@ document.getElementById('printButton').addEventListener('click', () => {
         ['Darovanje', row[9] || '—'],
         ['Svet', row[10] || '—'],
         ['Odpev po povzdigovanju', row[11] || '—'],
-        ['Očenaš', row[12] || '—'],
+        ['Ocenas', row[12] || '—'],
         ['Jagnje bozje', row[13] || '—'],
         ['Obhajilo 1', row[14] ? 'Najprej nekoliko tisine ali preludija, da se glavnina ljudi obhaja, nato:\n' + row[14] : '—'],
         ['Obhajilo 2', row[15] || '—'],
