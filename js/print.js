@@ -57,7 +57,7 @@ document.getElementById('printButton').addEventListener('click', () => {
             0: { cellWidth: 50 },
             1: { cellWidth: 120 }
         },
-        headStyles: { fillColor: [240, 240, 240], textColor: 20 },
+        // headStyles: { fillColor: [240, 240, 240], textColor: 20 },
         theme: 'grid',
         margin: { left: 14, right: 14 }
     });
