@@ -1,3 +1,5 @@
+let fp;
+
 document.getElementById('prevButton').addEventListener('click', () => {
     if (currentIndex > 0) {
         currentIndex--;
@@ -20,3 +22,31 @@ document.getElementById('nextButton').addEventListener('click', () => {
         displayContent();
     }
 });
+
+function getAvailableDates() {
+    return data.map(row => {
+        const [d, m, y] = row[0].split('.').map(s => s.trim());
+        return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+    });
+}
+
+function setupCalendar() {
+    const availableDates = getAvailableDates();
+    if (fp) fp.destroy();
+
+    fp = flatpickr("#calendarButton", {
+        clickOpens: true,
+        allowInput: false,
+        dateFormat: "Y-m-d",
+        enable: availableDates,
+        onChange: function(selectedDates, dateStr) {
+            const [y, m, d] = dateStr.split('-');
+            const formatted = `${parseInt(d)}. ${parseInt(m)}. ${y}`;
+            const idx = data.findIndex(row => row[0] === formatted);
+            if (idx !== -1) {
+                currentIndex = idx;
+                displayContent();
+            }
+        }
+    });
+}

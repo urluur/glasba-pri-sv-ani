@@ -34,6 +34,7 @@ function fetchData() {
 
             isLoading = false;
             displayContent();
+            setupCalendar();
         })
         .catch(error => {
             isLoading = false;
