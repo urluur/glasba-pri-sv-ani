@@ -2,13 +2,24 @@ let previousData = null;
 let currentIndex = 0;
 let data = [];
 let isLoading = false;
+let csvUrl = ""
 
-const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSYxfGny6wzQTybmOngXjUFyMZOf6_PfjUavJicO3ZIlO9WMEo1nsnHa5ghTjB7lEObTkuBthF4bTCI/pub?output=csv';
+fetch('./config.json')
+    .then(response => response.json())
+    .then(config => {
+        csvUrl = config.csvUrl;
+        fetchData();
+        setInterval(fetchData, 60000);
+    })
+    .catch(error => {
+        console.error('Error loading config.json:', error);
+    });
 
 function fetchData() {
     isLoading = true;
     showSpinner();
     const url = csvUrl + (csvUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+    
     fetch(url)
         .then(response => response.text())
         .then(csvData => {
