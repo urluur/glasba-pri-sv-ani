@@ -12,3 +12,11 @@ Spletna stran, na kateri si lahko ogledate razpored glasbe v cerkvi pri sv. Ani 
 - Odprite datoteko `config.json` v uredilniku besedil.
 - Spremenite `csvUrl` z svojim URL-jem do CSV datoteke z glasbo.
 - CSV datoteka mora biti v enakem formatu kot trenutna datoteka.
+
+> [!TIP]
+> Priporočamo, da uporabite [Google Sheets](https://docs.google.com/spreadsheets/).
+>
+> - Ustvarite svojo preglednico
+> - V meniju "Datoteka" izberite "Objavi na spletu"
+> - Izberite "Celoten dokument" in "CSV" kot format
+> - Kopirajte URL in ga prilepite v `config.json`
