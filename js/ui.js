@@ -110,6 +110,6 @@ function displayContent() {
             )
             .join("")}
             </tbody>
-        </table>s
+        </table>
     `;
 }
