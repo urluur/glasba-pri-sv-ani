@@ -23,7 +23,10 @@ document.getElementById("printButton").addEventListener("click", () => {
             row[14]
                 ? row[14].length <= 1
                     ? row[14]
-                    : `Najprej nekoliko tišine ali preludija, da se glavnina ljudi obhaja, nato: \n${row[14]}`
+                    : [
+                          { text: "Najprej nekoliko tišine ali preludija, da se glavnina ljudi obhaja, nato:", style: "small" },
+                          `${row[14]}`,
+                      ]
                 : "—",
         ],
         ["Obhajilo 2", row[15] || "—"],
@@ -48,13 +51,17 @@ document.getElementById("printButton").addEventListener("click", () => {
         ],
         styles: {
             header: {
-                fontSize: 21,
+                fontSize: 18,
                 bold: true,
-                margin: [0, 0, 0, 10], // [left, top, right, bottom]
+                margin: [0, 0, 0, 8], // [left, top, right, bottom]
             },
             subheader: {
                 fontSize: 16,
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, 6],
+            },
+            small: {
+                margin: [0, 0, 0, 2],
+                fontSize: 11,
             },
         },
         defaultStyle: {
