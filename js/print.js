@@ -48,23 +48,18 @@ document.getElementById("printButton").addEventListener("click", () => {
         ],
         styles: {
             header: {
-                fontSize: 16,
+                fontSize: 21,
                 bold: true,
                 margin: [0, 0, 0, 10], // [left, top, right, bottom]
             },
             subheader: {
-                fontSize: 12,
+                fontSize: 16,
                 margin: [0, 0, 0, 5],
-            },
-            tableHeader: {
-                bold: true,
-                fontSize: 12,
-                color: "black",
             },
         },
         defaultStyle: {
             font: "Roboto",
-            fontSize: 11,
+            fontSize: 16,
         },
     };
 
