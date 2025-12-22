@@ -61,7 +61,7 @@ document.getElementById("printButton").addEventListener("click", () => {
             },
             small: {
                 margin: [0, 0, 0, 2],
-                fontSize: 11,
+                fontSize: 10.5,
             },
         },
         defaultStyle: {
