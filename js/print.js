@@ -45,7 +45,11 @@ document.getElementById("printButton").addEventListener("click", () => {
                     body: fields,
                 },
                 layout: {
-                    // fillColor: (rowIndex) => (rowIndex === 0 ? "#f0f0f0" : null),
+                    // No borders
+                    // hLineWidth: (i, node) => (i === 0 || i === node.table.body.length ? 0 : 1),
+                    // vLineWidth: (i, node) => (i === 0 || i === node.table.widths.length ? 0 : 1),
+                    // hLineColor: () => "#000000",
+                    // vLineColor: () => "#000000",
                 },
             },
         ],
